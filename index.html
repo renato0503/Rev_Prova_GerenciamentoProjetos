@@ -47,7 +47,6 @@
 
   <script>
     const questions = [
-      // Estruturas e Metodologias de GP
       { question: "No PMBOK, quais são os grupos de processos", answers: [
         { text: "Iniciação, Planejamento, Execução, Monitoramento e Controle, Encerramento", correct: true, rationale: "Estrutura dos grupos de processos." },
         { text: "Concepção, Design, Construção, Operação, Desativação", correct: false, rationale: "Sequência típica de engenharia, não PMBOK." },
@@ -78,8 +77,6 @@
         { text: "DSDM, Crystal e COBIT", correct: false, rationale: "Não é o trio do mapa." },
         { text: "TOGAF, CMMI e DevOps", correct: false, rationale: "Não consta no mapa." }
       ]},
-
-      // Ciclo de Vida do Projeto
       { question: "Iniciação tem como resultados principais", answers: [
         { text: "Justificativa e autorização com o termo de abertura e a identificação de stakeholders", correct: true, rationale: "Elementos da iniciação no mapa." },
         { text: "Plano de testes e entrega final ao cliente", correct: false, rationale: "Entregas de fases posteriores." },
@@ -110,8 +107,6 @@
         { text: "Compressão de cronograma", correct: false, rationale: "Técnica de tempo." },
         { text: "Negociação de contratos futuros", correct: false, rationale: "Não integra o encerramento do projeto atual." }
       ]},
-
-      // Área: Gerenciamento do Escopo
       { question: "Introdução ao escopo no mapa destaca que escopo é", answers: [
         { text: "Um dos pilares do gerenciamento de projetos", correct: true, rationale: "Escopo aparece como pilar." },
         { text: "Apenas um documento financeiro", correct: false, rationale: "Escopo descreve trabalho e produto." },
@@ -142,8 +137,6 @@
         { text: "Somente inspeção visual do produto", correct: false, rationale: "Validação é mais ampla." },
         { text: "Eliminação de requisitos de baixa prioridade sem registro", correct: false, rationale: "Mudanças passam por controle." }
       ]},
-
-      // Área: Cronograma e Custos — Cronograma
       { question: "No cronograma, a função de sequenciar atividades baseia-se em", answers: [
         { text: "Relações lógicas e dependências", correct: true, rationale: "Elemento do mapa para cronograma." },
         { text: "Ordem alfabética das atividades", correct: false, rationale: "Não representa dependências." },
@@ -162,8 +155,6 @@
         { text: "Aumento de reservas gerenciais para ganhar tempo", correct: false, rationale: "Reserva não reduz prazo por si." },
         { text: "Retrabalho planejado sem avaliação de risco", correct: false, rationale: "Não recomendado." }
       ]},
-
-      // Área: Cronograma e Custos — Estimativas
       { question: "As estimativas no mapa evoluem com", answers: [
         { text: "Precisão gradual ao longo do ciclo", correct: true, rationale: "Diretriz mapeada para estimativas." },
         { text: "Precisão fixa desde a iniciação", correct: false, rationale: "Precisão aumenta com informação." },
@@ -182,8 +173,6 @@
         { text: "Cor do diagrama e tamanho da fonte", correct: false, rationale: "Irrelevantes." },
         { text: "Quantidade de reuniões sociais", correct: false, rationale: "Não é fator técnico." }
       ]},
-
-      // Área: Cronograma e Custos — Orçamento
       { question: "O orçamento do projeto no mapa inclui", answers: [
         { text: "Estimativas, custos diretos e indiretos, reservas e impostos", correct: true, rationale: "Elementos listados para orçamento." },
         { text: "Somente custos diretos de equipe", correct: false, rationale: "Abrange mais itens." },
@@ -202,8 +191,6 @@
         { text: "Sobras de caixa para investimento", correct: false, rationale: "Não é o objetivo." },
         { text: "Despesas administrativas fixas", correct: false, rationale: "Outros itens do orçamento." }
       ]},
-
-      // Área: Cronograma e Custos — Controle de Custos (EVM)
       { question: "A análise de valor agregado EVM integra", answers: [
         { text: "Escopo, prazo e custo", correct: true, rationale: "Base do EVM conforme mapa." },
         { text: "Qualidade e satisfação do cliente apenas", correct: false, rationale: "EVM mede desempenho de custo e prazo com escopo." },
@@ -240,8 +227,6 @@
         { text: "AC menos EV", correct: false, rationale: "Variação de custo em outra forma." },
         { text: "PV dividido por AC", correct: false, rationale: "Não representa SPI." }
       ]},
-
-      // Outras Áreas de Conhecimento — Recursos Humanos
       { question: "Na área de recursos humanos do mapa, o trabalho do gerente envolve", answers: [
         { text: "Planejar, adquirir, desenvolver e gerenciar a equipe", correct: true, rationale: "Conjunto citado." },
         { text: "Apenas contratar e demitir", correct: false, rationale: "Abrange mais processos." },
@@ -254,8 +239,6 @@
         { text: "Dispensável em equipes ágeis", correct: false, rationale: "Incorreto." },
         { text: "Definido apenas por contratos", correct: false, rationale: "Vai além de contratos." }
       ]},
-
-      // Outras Áreas de Conhecimento — Riscos
       { question: "Gerenciamento de riscos no mapa inclui", answers: [
         { text: "Identificar, analisar e monitorar", correct: true, rationale: "Sequência resumida." },
         { text: "Eliminar toda incerteza", correct: false, rationale: "Eliminação total não é viável." },
@@ -267,114 +250,6 @@
         { text: "PERT e CPM", correct: false, rationale: "Técnicas de cronograma." },
         { text: "MoSCoW e Kano", correct: false, rationale: "Priorização de requisitos." },
         { text: "EVM e Curva S", correct: false, rationale: "Controle de custos." }
-      ]},
-
-      // Outras Áreas de Conhecimento — Partes Interessadas
-      { question: "O plano de engajamento de partes interessadas serve para", answers: [
-        { text: "Definir estratégias de envolvimento conforme análise", correct: true, rationale: "Função do plano alinhada ao mapa." },
-        { text: "Calcular impostos sobre contratos", correct: false, rationale: "Não relacionado." },
-        { text: "Construir EAP", correct: false, rationale: "EAP trata escopo." },
-        { text: "Definir CPI e SPI", correct: false, rationale: "Índices de EVM." }
-      ]},
-      { question: "A matriz de influência citada no mapa também é conhecida como", answers: [
-        { text: "Salience Model", correct: true, rationale: "Ferramenta do mapa para stakeholders." },
-        { text: "RACI", correct: false, rationale: "Matriz de responsabilidades." },
-        { text: "GUT", correct: false, rationale: "Outra priorização." },
-        { text: "Ishikawa", correct: false, rationale: "Causa e efeito." }
-      ]},
-
-      // Outras Áreas de Conhecimento — Aquisições
-      { question: "Em aquisições, o foco do mapa é", answers: [
-        { text: "Gestão de contratos", correct: true, rationale: "Tema resumido no mapa." },
-        { text: "Apenas benchmarking de preços", correct: false, rationale: "Contratos envolvem cláusulas e desempenho." },
-        { text: "Dispensa de formalização contratual", correct: false, rationale: "Contrato formaliza responsabilidades." },
-        { text: "Uso exclusivo de preço fixo", correct: false, rationale: "O tipo depende do escopo e risco." }
-      ]},
-
-      // Refino adicional dentro das mesmas áreas do mapa
-      { question: "Em PRINCE2, os processos organizam o trabalho do início ao fim. Qual alternativa descreve a ideia central", answers: [
-        { text: "Processos encadeados que orientam desde a viabilidade até o encerramento sob governança definida", correct: true, rationale: "Descrição compatível com o método no mapa." },
-        { text: "Processos únicos para projetos de software apenas", correct: false, rationale: "Método é genérico." },
-        { text: "Processos sem papéis definidos", correct: false, rationale: "PRINCE2 define papéis claros." },
-        { text: "Processos sem relação com temas", correct: false, rationale: "Temas e processos se relacionam." }
-      ]},
-      { question: "No IPMA, o ICB orienta certificação por", answers: [
-        { text: "Competências", correct: true, rationale: "Núcleo do modelo." },
-        { text: "Artefatos obrigatórios de status", correct: false, rationale: "Não é foco do ICB." },
-        { text: "Exigência de um único método prescritivo", correct: false, rationale: "IPMA é agnóstico de método." },
-        { text: "Somente métricas financeiras", correct: false, rationale: "Abrange dimensões técnicas, contextuais e comportamentais." }
-      ]},
-      { question: "No Scrum, conforme o mapa de abordagens ágeis, a entrega ocorre", answers: [
-        { text: "Em ciclos curtos chamados sprints", correct: true, rationale: "Elemento essencial do Scrum." },
-        { text: "Apenas ao final do projeto", correct: false, rationale: "Scrum promove entregas frequentes." },
-        { text: "Sem backlog", correct: false, rationale: "Backlog é base do Scrum." },
-        { text: "Sem inspeção e adaptação", correct: false, rationale: "Scrum promove empirismo." }
-      ]},
-      { question: "Kanban no mapa é descrito como", answers: [
-        { text: "Gestão de fluxo visual", correct: true, rationale: "Quadro e limites de WIP para fluxo." },
-        { text: "Modelo de competência", correct: false, rationale: "Isso é IPMA." },
-        { text: "Técnica de caminho crítico", correct: false, rationale: "Assunto de cronograma." },
-        { text: "Matriz de probabilidade", correct: false, rationale: "Ferramenta de riscos." }
-      ]},
-      { question: "SAFe conforme o mapa é", answers: [
-        { text: "Framework escalado para ágil", correct: true, rationale: "Foco em escala organizacional." },
-        { text: "Ferramenta de EVM", correct: false, rationale: "Não se aplica." },
-        { text: "Modelo de aquisições", correct: false, rationale: "Não se aplica." },
-        { text: "Matriz de stakeholders", correct: false, rationale: "Não se aplica." }
-      ]},
-      { question: "Na iniciação, o termo de abertura define", answers: [
-        { text: "Autorização e direção inicial do projeto", correct: true, rationale: "Elemento de iniciação citado." },
-        { text: "Sequência de dependências detalhadas", correct: false, rationale: "Parte do cronograma." },
-        { text: "Curva S consolidada", correct: false, rationale: "Controle de custos." },
-        { text: "Cálculo de CPI e SPI", correct: false, rationale: "EVM." }
-      ]},
-      { question: "No planejamento, a baseline resultante permite", answers: [
-        { text: "Comparação de desempenho nas fases seguintes", correct: true, rationale: "Serve de referência." },
-        { text: "Dispensa de controle de mudanças", correct: false, rationale: "Controle permanece necessário." },
-        { text: "Substituição do plano de riscos", correct: false, rationale: "Processos distintos." },
-        { text: "Aceite final antecipado", correct: false, rationale: "Aceite ocorre no encerramento." }
-      ]},
-      { question: "No controle do escopo, a validação com documentação conforme o mapa visa", answers: [
-        { text: "Formalizar o aceite das entregas", correct: true, rationale: "Validação foca aceite documentado." },
-        { text: "Calcular folga livre", correct: false, rationale: "Cálculo de tempo." },
-        { text: "Aprovar contratos", correct: false, rationale: "Aquisições." },
-        { text: "Atualizar matriz de influência", correct: false, rationale: "Stakeholders." }
-      ]},
-      { question: "Em estimativas de três pontos PERT, a entrada necessária é", answers: [
-        { text: "Otimista, mais provável, pessimista", correct: true, rationale: "Técnica listada no mapa." },
-        { text: "Somente histórico", correct: false, rationale: "Histórico pode apoiar, mas são três valores." },
-        { text: "Apenas custo de material", correct: false, rationale: "Técnica vale para duração ou esforço." },
-        { text: "Velocidade média do time", correct: false, rationale: "Métrica ágil, não PERT." }
-      ]},
-      { question: "A folga no cronograma é", answers: [
-        { text: "Tempo que uma atividade pode atrasar sem afetar o caminho crítico", correct: true, rationale: "Definição ligada ao cálculo de folgas no mapa." },
-        { text: "Margem financeira do orçamento", correct: false, rationale: "Isso são reservas." },
-        { text: "Tempo reservado à documentação", correct: false, rationale: "Não é a definição." },
-        { text: "Atraso obrigatório entre fases", correct: false, rationale: "Lead e lag tratam defasagens." }
-      ]},
-      { question: "No orçamento, impostos aparecem como", answers: [
-        { text: "Itens explícitos do custo", correct: true, rationale: "Mapa cita impostos entre elementos." },
-        { text: "Despesas ignoradas por padrão", correct: false, rationale: "Devem ser considerados." },
-        { text: "Parte da reserva gerencial", correct: false, rationale: "Categorias distintas." },
-        { text: "Somente custo indireto opcional", correct: false, rationale: "Tratamento depende da política, mas constam." }
-      ]},
-      { question: "No plano de engajamento, a análise com o Salience Model considera", answers: [
-        { text: "Poder, legitimidade e urgência", correct: true, rationale: "Atributos do modelo para priorizar atenção." },
-        { text: "Custo, preço e margem", correct: false, rationale: "Indicadores financeiros." },
-        { text: "Tempo, escopo e qualidade", correct: false, rationale: "Dimensões do projeto, não do modelo." },
-        { text: "Cor, forma e tamanho", correct: false, rationale: "Sem relação." }
-      ]},
-      { question: "A matriz de probabilidade e impacto é usada para", answers: [
-        { text: "Classificar riscos para priorização de respostas", correct: true, rationale: "Uso citado no mapa." },
-        { text: "Sequenciar atividades", correct: false, rationale: "Cronograma trata isso." },
-        { text: "Criar contratos", correct: false, rationale: "Aquisições." },
-        { text: "Medir satisfação do usuário", correct: false, rationale: "Outro domínio." }
-      ]},
-      { question: "Gestão de contratos no mapa de aquisições cobre", answers: [
-        { text: "Relação entre partes, entregas e responsabilidades formais", correct: true, rationale: "Síntese do objetivo." },
-        { text: "Só compras à vista sem contrato", correct: false, rationale: "Contratos estruturam a relação." },
-        { text: "Apenas ordem de serviço verbal", correct: false, rationale: "Registro formal é necessário." },
-        { text: "Exclusão de critérios de desempenho", correct: false, rationale: "Critérios devem constar." }
       ]}
     ];
 
