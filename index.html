@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Quiz Interativo - Gerenciamento de Projetos</title>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f0f2f5;color:#333;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:20px;box-sizing:border-box}
+    .container{background:#fff;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1);width:100%;max-width:720px;padding:30px;box-sizing:border-box}
+    h1{color:#0056b3;text-align:center;margin:0 0 20px 0;font-size:1.8em}
+    #question{font-size:1.15em;font-weight:600;margin:0 0 16px 0}
+    .btn-grid{display:grid;grid-template-columns:1fr;gap:10px}
+    .btn{background:#f8f9fa;border:1px solid #ced4da;border-radius:8px;padding:14px;font-size:1em;text-align:left;cursor:pointer;transition:.2s}
+    .btn:hover:not([disabled]){background:#e9ecef;border-color:#b1b9c1}
+    .btn.correct{background:#d4edda;color:#155724;border-color:#c3e6cb}
+    .btn.wrong{background:#f8d7da;color:#721c24;border-color:#f5c6cb}
+    .btn .rationale{display:block;margin-top:8px;font-size:.9em;font-style:italic}
+    .controls{display:flex;justify-content:center;align-items:center;margin-top:18px;gap:10px}
+    #next-btn,#restart-btn{background:#007bff;color:#fff;border:none;padding:12px 22px;border-radius:8px;font-weight:700;cursor:pointer}
+    #next-btn:hover,#restart-btn:hover{background:#0056b3}
+    .hide{display:none}
+    #score-container{text-align:center;font-size:1.3em;font-weight:700}
+    #progress-text{text-align:center;margin-bottom:12px;font-size:.9em;color:#6c757d}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz: Gerenciamento de Projetos</h1>
+
+    <div id="quiz-container">
+      <div id="progress-text"></div>
+      <div id="question-container">
+        <div id="question">Carregando</div>
+      </div>
+      <div id="answer-buttons" class="btn-grid"></div>
+    </div>
+
+    <div id="score-container" class="hide">
+      <p id="score-text"></p>
+      <button id="restart-btn">Refazer o Quiz</button>
+    </div>
+
+    <div class="controls">
+      <button id="next-btn" class="hide">Próxima Pergunta</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "Projeto difere de operações contínuas por qual característica", answers: [
+        { text: "Duração indeterminada com repetição constante", correct: false, rationale: "Operações são repetitivas e contínuas." },
+        { text: "Temporalidade com entregas únicas", correct: true, rationale: "Projeto tem começo e fim definidos e entrega única." },
+        { text: "Escopo indefinido por todo o ciclo", correct: false, rationale: "Escopo é definido e controlado." },
+        { text: "Ausência de restrições de prazo", correct: false, rationale: "Prazo é uma restrição do triângulo de projeto." }
+      ]},
+      { question: "Programa em relação a projeto e portfólio tem qual função", answers: [
+        { text: "Agrupa projetos relacionados para benefício coordenado", correct: true, rationale: "Integra projetos correlatos para ganhos conjuntos." },
+        { text: "Reúne todos os projetos sem critério", correct: false, rationale: "Isso descreve portfólio sem estratégia, o que não procede." },
+        { text: "É um único projeto grande", correct: false, rationale: "Não é um mega-projeto, é conjunto coordenado." },
+        { text: "Gere atividades operacionais rotineiras", correct: false, rationale: "Operações não compõem programa." }
+      ]},
+      { question: "Portfólio trata de que decisão", answers: [
+        { text: "Alocação estratégica de recursos entre projetos e programas", correct: true, rationale: "Portfólio prioriza investimentos conforme objetivos." },
+        { text: "Sequenciamento de atividades do cronograma", correct: false, rationale: "Isso está no plano do projeto." },
+        { text: "Mudança de requisitos", correct: false, rationale: "Mudanças de requisitos ficam no escopo." },
+        { text: "Auditoria de qualidade de fornecedores", correct: false, rationale: "Tema de qualidade e aquisições." }
+      ]},
+      { question: "Ciclo de vida preditivo se caracteriza por", answers: [
+        { text: "Entregas evolutivas com escopo adaptativo", correct: false, rationale: "Descrição de abordagens ágeis." },
+        { text: "Escopo, prazo e custo definidos cedo com mudanças controladas", correct: true, rationale: "Estrutura planejada desde o início." },
+        { text: "Backlog priorizado continuamente", correct: false, rationale: "Prática comum em ágil." },
+        { text: "Elimina fase de encerramento", correct: false, rationale: "Todo projeto encerra formalmente." }
+      ]},
+      { question: "Grupo de processos que autoriza formalmente o projeto", answers: [
+        { text: "Iniciação", correct: true, rationale: "Emite o termo de abertura e autoriza o início." },
+        { text: "Planejamento", correct: false, rationale: "Detalha como executar o trabalho." },
+        { text: "Execução", correct: false, rationale: "Realiza o trabalho planejado." },
+        { text: "Monitoramento e controle", correct: false, rationale: "Acompanha e corrige desvios." }
+      ]},
+      { question: "Planejamento integra quais dimensões", answers: [
+        { text: "Escopo, cronograma, custos, qualidade, recursos, comunicações, riscos, aquisições e partes interessadas", correct: true, rationale: "Integra as áreas de conhecimento do guia." },
+        { text: "Somente cronograma e custos", correct: false, rationale: "Abrange muito mais que tempo e custo." },
+        { text: "Apenas escopo e comunicação", correct: false, rationale: "Cobertura é mais ampla." },
+        { text: "Somente riscos e aquisições", correct: false, rationale: "Não limita a duas áreas." }
+      ]},
+      { question: "Execução tem foco em", answers: [
+        { text: "Realizar o trabalho para gerar entregas", correct: true, rationale: "Entrega conforme plano aprovado." },
+        { text: "Aprovar o caso de negócio", correct: false, rationale: "Caso de negócio antecede o projeto." },
+        { text: "Encerrar contratos", correct: false, rationale: "Atividade típica do encerramento." },
+        { text: "Definir a EAP", correct: false, rationale: "EAP é criada no planejamento do escopo." }
+      ]},
+      { question: "Monitoramento e controle cobre", answers: [
+        { text: "Comparar desempenho ao plano e gerenciar mudanças", correct: true, rationale: "Mede, analisa e corrige desvios." },
+        { text: "Apenas reporte de status", correct: false, rationale: "Inclui ações corretivas e preventivas." },
+        { text: "Homologar requisitos", correct: false, rationale: "Homologação integra validação do escopo." },
+        { text: "Contratar equipe", correct: false, rationale: "Assunto de recursos na execução." }
+      ]},
+      { question: "Encerramento formaliza", answers: [
+        { text: "Aceite das entregas e lições aprendidas", correct: true, rationale: "Registra aceite e conhecimento." },
+        { text: "Replanejamento de marcos", correct: false, rationale: "Replanejamento ocorre antes do fim." },
+        { text: "Criação do termo de abertura", correct: false, rationale: "Atividade de iniciação." },
+        { text: "Definição de riscos residuais", correct: false, rationale: "Riscos são acompanhados ao longo do projeto." }
+      ]},
+      { question: "Termo de abertura estabelece", answers: [
+        { text: "Autorização, objetivos, premissas, restrições e gerente do projeto", correct: true, rationale: "Documento que cria o projeto e define liderança." },
+        { text: "Lista detalhada de atividades", correct: false, rationale: "Isso pertence ao cronograma." },
+        { text: "EAP completa", correct: false, rationale: "EAP vem depois do termo." },
+        { text: "Contratos assinados", correct: false, rationale: "Aquisições são planejadas depois." }
+      ]},
+      { question: "EAP decompõe", answers: [
+        { text: "Entregas em pacotes de trabalho", correct: true, rationale: "Estrutura orientada a entregas controláveis." },
+        { text: "Atividades em dependências", correct: false, rationale: "Isso é do cronograma." },
+        { text: "Riscos em categorias", correct: false, rationale: "Isso pertence ao RBS." },
+        { text: "Custos em centros de custo", correct: false, rationale: "Tema de controle financeiro." }
+      ]},
+      { question: "Requisito bem definido apresenta", answers: [
+        { text: "Clareza, mensurabilidade e critério de aceite", correct: true, rationale: "Permite verificação objetiva." },
+        { text: "Descrição aberta sem métricas", correct: false, rationale: "Ambiguidade dificulta validação." },
+        { text: "Apenas benefício esperado", correct: false, rationale: "Benefício não substitui requisito." },
+        { text: "Somente prioridade", correct: false, rationale: "Prioridade sozinha não define requisito." }
+      ]},
+      { question: "Ferramenta adequada para modelar escopo", answers: [
+        { text: "Diagrama de casos de uso e mapa de produto", correct: true, rationale: "Técnicas visuais para fronteiras e funções." },
+        { text: "Curva ABC de materiais", correct: false, rationale: "Foco em estoques." },
+        { text: "Diagrama de Ishikawa", correct: false, rationale: "Causas e efeitos na qualidade." },
+        { text: "Pareto de custos indiretos", correct: false, rationale: "Não descreve escopo." }
+      ]},
+      { question: "Sequenciamento de atividades usa", answers: [
+        { text: "Relações de precedência como TI e TT", correct: true, rationale: "Define ordem lógica entre atividades." },
+        { text: "Ordenação alfabética", correct: false, rationale: "Não representa dependências técnicas." },
+        { text: "Distribuição normal da duração", correct: false, rationale: "Assunto de estimativa, não precedência." },
+        { text: "Critério de aceite do produto", correct: false, rationale: "Tema de escopo e qualidade." }
+      ]},
+      { question: "Caminho crítico representa", answers: [
+        { text: "Conjunto de atividades com menor folga total", correct: true, rationale: "Folga zero ou mínima determina o caminho." },
+        { text: "Atividades de menor custo", correct: false, rationale: "Custo não define criticidade." },
+        { text: "Pacotes de trabalho da EAP", correct: false, rationale: "Estrutura de escopo, não de tempo." },
+        { text: "Riscos de maior impacto", correct: false, rationale: "Assunto do plano de riscos." }
+      ]},
+      { question: "Compressão por crashing envolve", answers: [
+        { text: "Adicionar recursos em atividades críticas com análise custo x tempo", correct: true, rationale: "Reduz prazo com aumento de custo direto." },
+        { text: "Remover marcos do cronograma", correct: false, rationale: "Não altera caminho de forma válida." },
+        { text: "Replanejar escopo sem controle integrado", correct: false, rationale: "Mudança segue processo formal." },
+        { text: "Aplicar lead negativo em todas as atividades", correct: false, rationale: "Ajustes são caso a caso." }
+      ]},
+      { question: "Fast tracking reduz prazo ao", answers: [
+        { text: "Executar atividades em paralelo assumindo risco de retrabalho", correct: true, rationale: "Sobreposição de fases aumenta risco." },
+        { text: "Diminuir qualidade", correct: false, rationale: "Qualidade não deve ser reduzida." },
+        { text: "Cortar testes", correct: false, rationale: "Corte eleva risco de falhas." },
+        { text: "Aumentar reservas", correct: false, rationale: "Reservas não encurtam prazo." }
+      ]},
+      { question: "Estimativa análoga usa", answers: [
+        { text: "Dados de projetos anteriores ajustados por similaridade", correct: true, rationale: "Técnica rápida baseada em histórico." },
+        { text: "Simulação de Monte Carlo", correct: false, rationale: "Outra técnica para incerteza." },
+        { text: "Detalhamento por atividade bottom-up", correct: false, rationale: "Isso é outra abordagem." },
+        { text: "Curva S", correct: false, rationale: "Curva S é acompanhamento." }
+      ]},
+      { question: "Valor Agregado mede", answers: [
+        { text: "Desempenho integrando escopo, prazo e custo", correct: true, rationale: "EV, PV e AC suportam índices e tendências." },
+        { text: "Apenas gasto real contra orçamento", correct: false, rationale: "Compara também trabalho realizado." },
+        { text: "Somente avanço físico", correct: false, rationale: "Integra físico e financeiro." },
+        { text: "Qualidade do produto", correct: false, rationale: "Qualidade usa métricas próprias." }
+      ]},
+      { question: "Orçamento do projeto consolida", answers: [
+        { text: "Linha de base de custos com reservas de contingência aprovadas", correct: true, rationale: "Base para controle de custos." },
+        { text: "Custos indiretos sem impostos", correct: false, rationale: "Impostos compõem o plano conforme política." },
+        { text: "Somente RH", correct: false, rationale: "Inclui materiais, serviços e outros." },
+        { text: "Somente despesas após execução", correct: false, rationale: "Planejado antes de executar." }
+      ]},
+      { question: "Curva S é útil para", answers: [
+        { text: "Acompanhar gasto acumulado e progresso ao longo do tempo", correct: true, rationale: "Facilita leitura de tendência e desvios." },
+        { text: "Definir requisitos funcionais", correct: false, rationale: "Escopo cuida de requisitos." },
+        { text: "Identificar riscos qualitativos", correct: false, rationale: "Ferramentas específicas tratam riscos." },
+        { text: "Calcular folga livre", correct: false, rationale: "Cálculo é do cronograma." }
+      ]},
+      { question: "Reserva de contingência cobre", answers: [
+        { text: "Riscos identificados com respostas planejadas", correct: true, rationale: "Trata incertezas conhecidas." },
+        { text: "Eventos totalmente desconhecidos", correct: false, rationale: "Reserva gerencial trata desconhecidos totais." },
+        { text: "Mudanças de escopo não aprovadas", correct: false, rationale: "Mudanças seguem controle formal." },
+        { text: "Impostos e taxas fixas", correct: false, rationale: "Isso é custo planejado regular." }
+      ]},
+      { question: "Documento que descreve produto e limites do trabalho", answers: [
+        { text: "Declaração do escopo", correct: true, rationale: "Define o que está dentro e fora do projeto." },
+        { text: "Plano de comunicação", correct: false, rationale: "Trata fluxos de informação." },
+        { text: "Plano de aquisições", correct: false, rationale: "Define o que será comprado." },
+        { text: "Registro de partes interessadas", correct: false, rationale: "Lista e analisa stakeholders." }
+      ]},
+      { question: "Critério para aceite de entregas é definido em", answers: [
+        { text: "Declaração do escopo e requisitos", correct: true, rationale: "Critérios de aceite ficam ligados ao escopo." },
+        { text: "EAP dicionário sem requisitos", correct: false, rationale: "Dicionário apoia mas não substitui requisitos." },
+        { text: "Plano de recursos", correct: false, rationale: "Não define aceite." },
+        { text: "Cronograma de marcos", correct: false, rationale: "Marcos não definem aceite." }
+      ]},
+      { question: "Medição de desempenho SPI usa", answers: [
+        { text: "EV dividido por PV", correct: true, rationale: "Índice de desempenho de prazo." },
+        { text: "AC menos EV", correct: false, rationale: "Isso é variação de custo quando invertido." },
+        { text: "PV dividido por AC", correct: false, rationale: "Não representa SPI." },
+        { text: "EV dividido por AC", correct: false, rationale: "Isso é CPI." }
+      ]},
+      { question: "CPI menor que 1 indica", answers: [
+        { text: "Custo acima do planejado", correct: true, rationale: "Gasto maior que valor entregue." },
+        { text: "Custo abaixo do planejado", correct: false, rationale: "Isso seria CPI maior que 1." },
+        { text: "Prazo adiantado", correct: false, rationale: "Prazo é SPI." },
+        { text: "Qualidade superior", correct: false, rationale: "Índice não mede qualidade." }
+      ]},
+      { question: "Estimativa paramétrica depende de", answers: [
+        { text: "Relação estatística entre variáveis e custos ou durações", correct: true, rationale: "Usa unidades produtivas e taxas." },
+        { text: "Opinião sem dados", correct: false, rationale: "Requer dados históricos confiáveis." },
+        { text: "Backlog emergente", correct: false, rationale: "Assunto ágil de priorização." },
+        { text: "Sequência de precedências", correct: false, rationale: "Depende do cronograma mas não é a base da técnica." }
+      ]},
+      { question: "Marcos no cronograma servem para", answers: [
+        { text: "Indicar pontos de controle sem duração", correct: true, rationale: "Eventos de duração zero para referência." },
+        { text: "Reduzir custos diretos", correct: false, rationale: "Marcos não alteram custos." },
+        { text: "Substituir pacotes de trabalho", correct: false, rationale: "Marcos não trocam entregas." },
+        { text: "Definir reservas gerenciais", correct: false, rationale: "Reservas são orçamentárias." }
+      ]},
+      { question: "Lead e lag são usados para", answers: [
+        { text: "Ajustar a defasagem entre atividades relacionadas", correct: true, rationale: "Antecipação e espera entre dependências." },
+        { text: "Aumentar orçamento", correct: false, rationale: "Não afeta orçamento diretamente." },
+        { text: "Criar novos riscos", correct: false, rationale: "Podem influenciar risco mas não são criadores por si." },
+        { text: "Definir baseline de escopo", correct: false, rationale: "Baseline de escopo é outro artefato." }
+      ]},
+      { question: "Caminho crítico muda quando", answers: [
+        { text: "Durações ou dependências mudam", correct: true, rationale: "Alterações podem deslocar a criticidade." },
+        { text: "Cores do diagrama mudam", correct: false, rationale: "Cor não interfere no cálculo." },
+        { text: "Código da WBS muda", correct: false, rationale: "Numeração não altera a lógica temporal." },
+        { text: "Relatórios são consolidados", correct: false, rationale: "Consolidação não altera cálculo de folgas." }
+      ]},
+      { question: "Controle integrado de mudanças garante", answers: [
+        { text: "Avaliação e decisão formal antes da implementação", correct: true, rationale: "Fluxo de aprovação centraliza mudanças." },
+        { text: "Implementação imediata", correct: false, rationale: "Mudanças não devem pular aprovação." },
+        { text: "Rejeição automática", correct: false, rationale: "Decisão depende de análise." },
+        { text: "Aprovação tácita por silêncio", correct: false, rationale: "Exige registro e decisão explícita." }
+      ]},
+      { question: "Registro de riscos contém", answers: [
+        { text: "Eventos, causas, respostas e responsáveis", correct: true, rationale: "Base do gerenciamento de riscos." },
+        { text: "Somente probabilidade", correct: false, rationale: "Inclui impacto, gatilhos e planos." },
+        { text: "Apenas impactos positivos", correct: false, rationale: "Abrange ameaças e oportunidades." },
+        { text: "Somente histórico de incidentes", correct: false, rationale: "Incidente não substitui risco." }
+      ]},
+      { question: "Matriz de probabilidade e impacto serve para", answers: [
+        { text: "Priorizar riscos conforme severidade", correct: true, rationale: "Ajuda na seleção de respostas." },
+        { text: "Sequenciar atividades", correct: false, rationale: "Isso é do cronograma." },
+        { text: "Negociar contratos", correct: false, rationale: "Tema de aquisições." },
+        { text: "Definir organograma", correct: false, rationale: "Tema de recursos." }
+      ]},
+      { question: "Contrato de preço fixo é mais indicado quando", answers: [
+        { text: "Escopo está bem definido", correct: true, rationale: "Menor incerteza sobre entregas." },
+        { text: "Escopo é aberto", correct: false, rationale: "Preferir tempo e material ou custo reembolsável." },
+        { text: "Fornecedor não aceita risco", correct: false, rationale: "Preço fixo transfere risco para o fornecedor." },
+        { text: "Precisa de ajuste mensal automático", correct: false, rationale: "Ajuste depende de cláusulas específicas." }
+      ]},
+      { question: "Engajamento de partes interessadas começa", answers: [
+        { text: "Na iniciação com identificação e análise", correct: true, rationale: "Base para estratégias de engajamento." },
+        { text: "Somente na execução", correct: false, rationale: "Começa cedo para orientar plano." },
+        { text: "No encerramento", correct: false, rationale: "Tarde demais para influenciar." },
+        { text: "Após auditoria externa", correct: false, rationale: "Não depende disso." }
+      ]},
+      { question: "Baseline de cronograma é usada para", answers: [
+        { text: "Comparar progresso e medir variações", correct: true, rationale: "Referência de desempenho temporal." },
+        { text: "Recalcular orçamento toda semana", correct: false, rationale: "Revisões seguem controle de mudanças." },
+        { text: "Definir requisitos funcionais", correct: false, rationale: "Assunto do escopo." },
+        { text: "Distribuir equipe", correct: false, rationale: "Planejamento de recursos usa outras entradas." }
+      ]},
+      { question: "Técnica do caminho crítico CPM calcula", answers: [
+        { text: "Datas cedo e tarde e folgas", correct: true, rationale: "Permite identificar criticidade." },
+        { text: "Somente custo total", correct: false, rationale: "Foco é tempo." },
+        { text: "Curva de aprendizado", correct: false, rationale: "Outro conceito." },
+        { text: "Índice de qualidade", correct: false, rationale: "Não é métrica de qualidade." }
+      ]},
+      { question: "Estimativa de três pontos usa", answers: [
+        { text: "Otimista, mais provável e pessimista", correct: true, rationale: "Aplica média simples ou PERT ponderada." },
+        { text: "Dois pontos e desvio", correct: false, rationale: "A técnica pede três estimativas." },
+        { text: "Apenas histórico", correct: false, rationale: "Pode usar histórico, mas precisa das três visões." },
+        { text: "Somente opinião do gerente", correct: false, rationale: "Deve envolver especialistas." }
+      ]},
+      { question: "Planejamento do escopo usa coleta de requisitos com", answers: [
+        { text: "Entrevistas, workshops, protótipos e questionários", correct: true, rationale: "Técnicas para elicitar necessidades." },
+        { text: "Auditoria financeira", correct: false, rationale: "Não coleta requisito." },
+        { text: "Estratégia de testes", correct: false, rationale: "Testes verificam, não coletam." },
+        { text: "Levantamento de curva S", correct: false, rationale: "Curva S acompanha execução." }
+      ]},
+      { question: "Estrutura de divisão organizacional no projeto é", answers: [
+        { text: "OBS que relaciona pacotes e unidades", correct: true, rationale: "Suporta responsabilidade por entregas." },
+        { text: "RBS de riscos", correct: false, rationale: "RBS é de riscos." },
+        { text: "CBS de custos", correct: false, rationale: "CBS foca centros e contas de custo." },
+        { text: "PBS de produto", correct: false, rationale: "PBS é decomposição do produto." }
+      ]},
+      { question: "Métricas de qualidade devem ser", answers: [
+        { text: "Mensuráveis com limites de controle definidos", correct: true, rationale: "Permite avaliar conformidade." },
+        { text: "Descritivas sem números", correct: false, rationale: "Dificulta verificação." },
+        { text: "Variáveis apenas qualitativas", correct: false, rationale: "Podem ser qualitativas e quantitativas." },
+        { text: "Dependentes do humor do cliente", correct: false, rationale: "Padrões objetivos orientam medição." }
+      ]},
+      { question: "Plano de comunicação define", answers: [
+        { text: "Quem comunica o quê, quando e por qual meio", correct: true, rationale: "Estrutura o fluxo de informação." },
+        { text: "Apenas calendário de reuniões", correct: false, rationale: "Abrange mais do que calendário." },
+        { text: "Somente relatórios finais", correct: false, rationale: "Inclui comunicações recorrentes." },
+        { text: "Plano de testes", correct: false, rationale: "Outro artefato." }
+      ]},
+      { question: "Aquisições devem considerar", answers: [
+        { text: "Make or buy com análise de custo total", correct: true, rationale: "Decisão entre produzir ou contratar." },
+        { text: "Somente menor preço", correct: false, rationale: "Critérios múltiplos podem ser aplicados." },
+        { text: "Prazo sem impacto em risco", correct: false, rationale: "Prazo afeta risco do projeto." },
+        { text: "Dispensa de contrato formal", correct: false, rationale: "Contrato formaliza responsabilidades." }
+      ]},
+      { question: "Gestão de mudanças no escopo deve", answers: [
+        { text: "Passar por solicitação, análise de impacto e decisão", correct: true, rationale: "Fluxo padronizado para controle." },
+        { text: "Ser aplicada diretamente", correct: false, rationale: "Evitar implementação sem aprovação." },
+        { text: "Ignorar impacto em custo", correct: false, rationale: "Análise avalia custo, prazo e risco." },
+        { text: "Substituir plano de riscos", correct: false, rationale: "São processos distintos." }
+      ]}
+    ];
+
+    const questionElement = document.getElementById('question');
+    const answerButtonsElement = document.getElementById('answer-buttons');
+    const nextButton = document.getElementById('next-btn');
+    const quizContainer = document.getElementById('quiz-container');
+    const scoreContainer = document.getElementById('score-container');
+    const scoreText = document.getElementById('score-text');
+    const restartButton = document.getElementById('restart-btn');
+    const progressText = document.getElementById('progress-text');
+
+    let shuffledQuestions, currentQuestionIndex, score;
+
+    function startGame(){
+      shuffledQuestions = questions.slice().sort(() => Math.random() - 0.5);
+      currentQuestionIndex = 0;
+      score = 0;
+      scoreContainer.classList.add('hide');
+      quizContainer.classList.remove('hide');
+      nextButton.classList.add('hide');
+      setNextQuestion();
+    }
+
+    function setNextQuestion(){
+      resetState();
+      showQuestion(shuffledQuestions[currentQuestionIndex]);
+    }
+
+    function showQuestion(q){
+      progressText.innerText = `Pergunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
+      questionElement.innerText = q.question;
+      q.answers.forEach(a=>{
+        const btn = document.createElement('button');
+        btn.innerText = a.text;
+        btn.classList.add('btn');
+        if(a.correct){ btn.dataset.correct = "true"; }
+        btn.dataset.rationale = a.rationale;
+        btn.addEventListener('click', selectAnswer);
+        answerButtonsElement.appendChild(btn);
+      });
+    }
+
+    function resetState(){
+      nextButton.classList.add('hide');
+      while(answerButtonsElement.firstChild){
+        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
+      }
+    }
+
+    function selectAnswer(e){
+      const selected = e.target;
+      const correct = selected.dataset.correct === "true";
+      if(correct){ score++; }
+
+      Array.from(answerButtonsElement.children).forEach(b=>{
+        setStatusClass(b, b.dataset.correct === "true");
+        b.disabled = true;
+        const r = document.createElement('span');
+        r.classList.add('rationale');
+        r.innerText = b.dataset.rationale || "";
+        b.appendChild(r);
+      });
+
+      if(shuffledQuestions.length > currentQuestionIndex + 1){
+        nextButton.classList.remove('hide');
+      } else {
+        showScore();
+      }
+    }
+
+    function setStatusClass(el, isCorrect){
+      el.classList.remove('correct','wrong');
+      el.classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+
+    function handleNext(){
+      currentQuestionIndex++;
+      setNextQuestion();
+    }
+
+    function showScore(){
+      quizContainer.classList.add('hide');
+      nextButton.classList.add('hide');
+      scoreContainer.classList.remove('hide');
+      const pct = Math.round((score / shuffledQuestions.length) * 100);
+      scoreText.innerHTML = `Você acertou ${score} de ${shuffledQuestions.length} perguntas (${pct}%)`;
+    }
+
+    nextButton.addEventListener('click', handleNext);
+    restartButton.addEventListener('click', startGame);
+    startGame();
+  </script>
+</body>
+</html>
